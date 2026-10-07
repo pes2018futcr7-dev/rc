@@ -1,0 +1,8 @@
+{
+  "name": "Meus CS Plugins",
+  "description": "Repositório de plugins CloudStream em português",
+  "manifestVersion": 1,
+  "pluginLists": [
+    "https://raw.githubusercontent.com/pes2018futcr7-dev/rc/master/plugins.json"
+  ]
+}

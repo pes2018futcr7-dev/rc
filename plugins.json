@@ -4,7 +4,7 @@
     "name": "RedeCanais",
     "description": "Filmes e séries em português do site redecanais.forum",
     "version": 2,
-    "url": "https://cdn.jsdelivr.net/gh/pes2018futcr7-dev/rc@master/MeuSiteProvider.cs3",
+    "url": "https://raw.githubusercontent.com/pes2018futcr7-dev/rc/master/MeuSiteProvider.cs3",
     "authors": ["pes2018futcr7-dev"],
     "iconUrl": "https://redecanais.forum/wp-content/themes/vizer-v10-6-2/assets/svg/favicon-redecanais.png",
     "tvTypes": ["Movie", "TvSeries", "Anime", "Cartoon"],

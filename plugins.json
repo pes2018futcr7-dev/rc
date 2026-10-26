@@ -3,14 +3,14 @@
     "internalName": "RedeCanais",
     "name": "RedeCanais",
     "description": "Filmes e séries em português do site redecanais.forum",
-    "version": 12,
+    "version": 13,
     "url": "https://raw.githubusercontent.com/pes2018futcr7-dev/rc/master/RC_provider.cs3",
     "authors": ["pes2018futcr7-dev"],
     "iconUrl": "https://redecanais.forum/wp-content/themes/vizer-v10-6-2/assets/svg/favicon-redecanais.png",
     "tvTypes": ["Movie", "TvSeries", "Anime", "Cartoon"],
     "language": "pt-BR",
     "status": 1,
-    "fileHash": "sha256-f85ea0141d56523a183aed991af420731497aa684307004b1e94dab9faef90d1",
-    "fileSize": 19360
+    "fileHash": "sha256-ec191cd927afdbf16ba9894c32cf45210b3a91c62765704f90985fef10e4d7e3",
+    "fileSize": 19454
   }
 ]

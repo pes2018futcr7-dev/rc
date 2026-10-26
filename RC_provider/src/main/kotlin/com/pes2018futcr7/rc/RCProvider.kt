@@ -1,4 +1,4 @@
-package com.davipassos.redecanais
+package com.pes2018futcr7.rc
 
 import android.net.Uri
 import com.lagradost.cloudstream3.*
@@ -6,10 +6,11 @@ import com.lagradost.cloudstream3.utils.ExtractorLink
 import com.lagradost.cloudstream3.utils.ExtractorLinkType
 import com.lagradost.cloudstream3.utils.Qualities
 import com.lagradost.cloudstream3.utils.loadExtractor
+import com.lagradost.cloudstream3.network.WebViewResolver
 import com.lagradost.cloudstream3.utils.newExtractorLink
 import org.jsoup.nodes.Element
 
-class RedeCanaisProvider : MainAPI() {
+class RCProvider : MainAPI() {
     override var mainUrl = "https://redecanais.forum"
     override var name = "RedeCanais"
     override val hasMainPage = true
@@ -215,6 +216,9 @@ class RedeCanaisProvider : MainAPI() {
     // ============================================================
     // LINKS DE VÍDEO
     // ============================================================
+    // ============================================================
+    // LINKS DE VÍDEO
+    // ============================================================
     override suspend fun loadLinks(
         data: String,
         isCasting: Boolean,
@@ -246,50 +250,52 @@ class RedeCanaisProvider : MainAPI() {
 
         if (tmdb == null) return false
 
-        val playerApi = "$mainUrl/wp-json/api/v1/player"
-
-        val resp = app.post(
-            playerApi,
-            data = mapOf(
-                "type" to if (isSeries) "episode" else "movie",
-                "tmdb" to tmdb,
-                "season" to season.toString(),
-                "episode" to episode.toString(),
-            ),
-            headers = mapOf(
-                "X-Requested-With" to "XMLHttpRequest",
-                "Referer" to cleanUrl,
-                "Accept" to "application/json, text/plain, */*",
-            )
-        ).text
-
-        val mp4Regex = Regex("https?://[^\"'\\s\\\\]+?\\.mp4[^\"'\\s\\\\]*")
-        val mp4Match = mp4Regex.find(resp)
-
-        if (mp4Match != null) {
-            callback.invoke(
-                newExtractorLink(
-                    source = this.name,
-                    name = this.name,
-                    url = mp4Match.value.replace("\\/", "/"),
-                    type = ExtractorLinkType.VIDEO
-                ) {
-                    this.referer = mainUrl
-                    this.quality = Qualities.Unknown.value
-                }
-            )
-            return true
+        // Tenta abrir o iframe diretamente (rf_isolated=1)
+        val redeflixUrl = if (isSeries) {
+            "https://redeflixapi.bar/serie/$tmdb/$season/$episode?rf_isolated=1"
+        } else {
+            "https://redeflixapi.bar/filme/$tmdb?rf_isolated=1"
         }
 
-        val iframe = doc.selectFirst("iframe[src]")?.attr("src")
-        if (iframe != null) {
-            loadExtractor(iframe, mainUrl, subtitleCallback, callback)
-            return true
+        try {
+            var foundVideoUrl: String? = null
+
+            val resolver = WebViewResolver(
+                interceptUrl = Regex("""\.m3u8|\.mp4"""),
+                additionalUrls = listOf(Regex("""\.m3u8|\.mp4""")),
+                useOkhttp = false
+            )
+
+            resolver.resolveUsingWebView(redeflixUrl, "https://redeflixapi.bar/") { response ->
+                val url = response.url.toString()
+                if (url.contains(".mp4") || url.contains(".m3u8")) {
+                    if (foundVideoUrl == null) {
+                        foundVideoUrl = url
+                    }
+                }
+                true
+            }
+
+            if (foundVideoUrl != null) {
+                callback.invoke(
+                    newExtractorLink(this.name, this.name, foundVideoUrl!!, ExtractorLinkType.VIDEO) {
+                        this.referer = "https://redeflixapi.bar/"
+                        this.quality = Qualities.Unknown.value
+                        this.headers = mapOf(
+                            "Referer" to "https://redeflixapi.bar/",
+                            "Origin" to "https://redeflixapi.bar"
+                        )
+                    }
+                )
+                return true
+            }
+
+        } catch (e: Exception) {
+            // ignora
         }
 
         return false
     }
-
     // ============================================================
     // HELPERS
     // ============================================================

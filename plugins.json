@@ -10,7 +10,7 @@
     "tvTypes": ["Movie", "TvSeries", "Anime", "Cartoon"],
     "language": "pt-BR",
     "status": 1,
-    "fileHash": "sha256-ec191cd927afdbf16ba9894c32cf45210b3a91c62765704f90985fef10e4d7e3",
-    "fileSize": 19454
+    "fileHash": "sha256-4bab8a9dbe392130b850333ec2ba3885b21c93a7a58d5b4b9a338cd02c8c9b2c",
+    "fileSize": 18817
   }
 ]
